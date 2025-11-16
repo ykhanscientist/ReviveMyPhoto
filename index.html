@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ReviveMyPhoto – Restore Old & Damaged Images</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    body { font-family: "Poppins", system-ui, sans-serif; }
+    .pulse { animation: pulse 1.5s infinite ease-in-out; }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.02); }
+    }
+  </style>
+</head>
+
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+  <header class="border-b border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-2xl bg-gradient-to-tr from-violet-500 to-cyan-400 flex items-center justify-center text-xs font-bold">
+          RM
+        </div>
+        <span class="font-semibold text-lg tracking-wide">ReviveMyPhoto</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <section class="max-w-6xl mx-auto px-4 py-10 grid md:grid-cols-2 gap-10 items-center">
+      <div>
+        <h1 class="text-3xl md:text-5xl font-bold mb-4 leading-tight">
+          Bring your <span class="text-violet-400">old photos</span> back to life
+        </h1>
+        <p class="text-slate-300 mb-6">
+          Upload your damaged or faded images and let AI clean scratches, boost details and restore colours.
+          100% online, powered by free & open-source tools.
+        </p>
+      </div>
+
+      <div id="uploader" class="bg-slate-900/70 border border-slate-800 rounded-3xl p-5 shadow-xl">
+        <h2 class="text-lg font-semibold mb-3">Upload & restore your photo</h2>
+        <p class="text-xs text-slate-400 mb-4">
+          Supported formats: JPG, PNG.
+        </p>
+
+        <label for="uploadInput" class="cursor-pointer border-2 border-dashed border-slate-700 rounded-2xl p-6 flex flex-col items-center justify-center text-center hover:border-violet-500 hover:bg-slate-900/60 transition">
+          <span class="text-sm font-medium mb-2">Click to upload or drag & drop</span>
+          <span class="text-xs text-slate-400">Image stays on device until enhancement.</span>
+          <input id="uploadInput" type="file" accept="image/*" class="hidden" />
+        </label>
+
+        <div class="grid grid-cols-2 gap-4 mt-6">
+          <div>
+            <h3 class="text-xs text-slate-400 mb-1">Original</h3>
+            <div class="aspect-[4/3] rounded-xl bg-slate-800 flex items-center justify-center overflow-hidden">
+              <img id="previewOriginal" alt="Original preview" class="max-h-full max-w-full hidden" />
+              <span id="placeholderOriginal" class="text-[11px] text-slate-500 px-4 text-center">
+                No image selected yet
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-xs text-slate-400 mb-1">Restored</h3>
+            <div class="aspect-[4/3] rounded-xl bg-slate-800 flex items-center justify-center overflow-hidden relative">
+              <img id="previewEnhanced" alt="Enhanced preview" class="max-h-full max-w-full hidden" />
+              <div id="loadingOverlay" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-slate-900/80">
+                <div class="w-10 h-10 rounded-full border-2 border-slate-600 border-t-violet-400 animate-spin mb-2"></div>
+                <p class="text-xs text-slate-300">Restoring...</p>
+              </div>
+              <span id="placeholderEnhanced" class="text-[11px] text-slate-500 px-4 text-center">
+                Enhanced version will appear here
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 flex flex-col sm:flex-row gap-3 items-center justify-between">
+          <button id="enhanceBtn" disabled class="px-5 py-2.5 rounded-full bg-gradient-to-r from-violet-500 to-cyan-400 text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition">
+            Enhance Photo
+          </button>
+        </div>
+
+        <p id="statusText" class="mt-3 text-xs text-slate-400 min-h-[1.5rem]"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-slate-800 mt-10">
+    <div class="max-w-6xl mx-auto px-4 py-4 text-xs text-slate-500 text-center">
+      Created by <strong>Younus Khan</strong> | ReviveMyPhoto
+    </div>
+  </footer>
+
+<script>
+    document.getElementById("uploadInput").addEventListener("change", function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      const original = document.getElementById("previewOriginal");
+      original.src = url;
+      original.classList.remove("hidden");
+      document.getElementById("placeholderOriginal").classList.add("hidden");
+      document.getElementById("enhanceBtn").disabled = false;
+    });
+</script>
+
+</body>
+</html>
