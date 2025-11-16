@@ -98,17 +98,74 @@
   </footer>
 
 <script>
-    document.getElementById("uploadInput").addEventListener("change", function (e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const url = URL.createObjectURL(file);
-      const original = document.getElementById("previewOriginal");
-      original.src = url;
-      original.classList.remove("hidden");
-      document.getElementById("placeholderOriginal").classList.add("hidden");
-      document.getElementById("enhanceBtn").disabled = false;
-    });
+  const uploadInput = document.getElementById("uploadInput");
+  const previewOriginal = document.getElementById("previewOriginal");
+  const previewEnhanced = document.getElementById("previewEnhanced");
+  const placeholderOriginal = document.getElementById("placeholderOriginal");
+  const placeholderEnhanced = document.getElementById("placeholderEnhanced");
+  const enhanceBtn = document.getElementById("enhanceBtn");
+  const loadingOverlay = document.getElementById("loadingOverlay");
+  const statusText = document.getElementById("statusText");
+
+  let selectedFile = null;
+
+  const API_URL = "https://revivemyphoto.onrender.com/api/enhance";
+
+  uploadInput.addEventListener("change", function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+    previewOriginal.src = url;
+    previewOriginal.classList.remove("hidden");
+    placeholderOriginal.classList.add("hidden");
+
+    selectedFile = file;
+    enhanceBtn.disabled = false;
+    statusText.textContent = "Image loaded. Click Enhance Photo to restore.";
+  });
+
+  enhanceBtn.addEventListener("click", async () => {
+    if (!selectedFile) {
+      statusText.textContent = "Please upload an image first.";
+      return;
+    }
+
+    enhanceBtn.disabled = true;
+    loadingOverlay.classList.remove("hidden");
+    placeholderEnhanced.classList.add("hidden");
+    statusText.textContent = "Restoring image…";
+
+    try {
+      const formData = new FormData();
+      formData.append("photo", selectedFile);
+
+      const response = await fetch(API_URL, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Server returned an error");
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+
+      previewEnhanced.src = url;
+      previewEnhanced.classList.remove("hidden");
+      statusText.textContent = "Done! Compare your restored photo.";
+    } catch (err) {
+      console.error(err);
+      statusText.textContent = "Something went wrong.";
+      placeholderEnhanced.classList.remove("hidden");
+    } finally {
+      loadingOverlay.classList.add("hidden");
+      enhanceBtn.disabled = false;
+    }
+  });
 </script>
+
 
 </body>
 </html>
