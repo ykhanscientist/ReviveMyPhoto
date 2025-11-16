@@ -16,7 +16,7 @@ app.add_middleware(
 )
 
 # Hugging Face model API
-HF_API_URL = "https://api-inference.huggingface.co/models/caidas/cai-pixelup"
+HF_API_URL = "https://api-inference.huggingface.co/models/TencentARC/GFPGAN"
 HF_API_KEY = "YOUR_HUGGINGFACE_API_KEY"  # <--- Replace this!
 
 headers = {"Authorization": f"Bearer {HF_API_KEY}"}
